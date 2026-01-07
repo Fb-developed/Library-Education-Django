@@ -1,0 +1,368 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Рӯйхати Хонандагон{% endblock title %}
+
+{% block extra_styles %}
+<style>
+    :root {
+        --primary-blue: #34BDEE;
+        --primary-dark: #003366;
+        --success-green: #28a745;
+        --warning-orange: #ffc107;
+        --text-color: #333;
+        --bg-light: #f4f7f6;
+        --white: #ffffff;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .list-container {
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 30px 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .filter-card {
+        background: var(--white);
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        align-items: end;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(52, 189, 238, 0.1);
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, var(--success-green), #20c997);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        height: fit-content;
+    }
+
+    .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+
+    .table-wrapper {
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        color: white;
+        padding: 20px 25px;
+    }
+
+    .table-header h5 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .table {
+        margin: 0;
+        width: 100%;
+    }
+
+    .table thead {
+        background: var(--bg-light);
+    }
+
+    .table thead th {
+        color: var(--text-color);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 15px;
+        border-bottom: 2px solid #e0e0e0;
+        white-space: nowrap;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9ff;
+    }
+
+    .table tbody td {
+        padding: 15px;
+        vertical-align: middle;
+        color: var(--text-color);
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, var(--warning-orange), #ff9800);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin: 2px;
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .btn-give-book {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin: 2px;
+    }
+
+    .btn-give-book:hover {
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .action-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .summary-footer {
+        background: var(--white);
+        padding: 20px 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .error-message {
+        background: #fee;
+        color: #c33;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    @media (max-width: 768px) {
+        .filter-row {
+            grid-template-columns: 1fr;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        .table {
+            min-width: 1000px;
+        }
+    }
+</style>
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="list-container">
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-user-graduate"></i>
+            Рӯйхати Хонандагон
+        </h1>
+    </div>
+
+    {% if error_message %}
+    <div class="error-message">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    <div class="filter-card">
+        <form method="GET" action="{% url 'khonandagon_list' %}" class="filter-row">
+            <div class="form-group">
+                <label for="id_sinf"><i class="fas fa-graduation-cap"></i> Синф:</label>
+                <select id="id_sinf" name="sinf" onchange="this.form.submit()">
+                    <option value="">Ҳама синфҳо</option>
+                    {% for i in "123456789" %}
+                    <option value="{{ forloop.counter }}" {% if sinf_value|stringformat:"i" == forloop.counter|stringformat:"i" %}selected{% endif %}>
+                        {{ forloop.counter }}
+                    </option>
+                    {% endfor %}
+                    <option value="10" {% if sinf_value == "10" %}selected{% endif %}>10</option>
+                    <option value="11" {% if sinf_value == "11" %}selected{% endif %}>11</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_fullname"><i class="fas fa-user"></i> Ному насаб:</label>
+                <input type="text" id="id_fullname" name="fullname" placeholder="Ҷустуҷӯ..." value="{{ fullname_value|default:'' }}" onchange="this.form.submit()">
+            </div>
+
+            <div class="form-group">
+                <label for="id_guruh"><i class="fas fa-users"></i> Гурӯҳ:</label>
+                <select id="id_guruh" name="guruh" onchange="this.form.submit()">
+                    <option value="">Ҳама гурӯҳҳо</option>
+                    <option value="А" {% if guruh_value == "А" %}selected{% endif %}>А</option>
+                    <option value="Б" {% if guruh_value == "Б" %}selected{% endif %}>Б</option>
+                    <option value="В" {% if guruh_value == "В" %}selected{% endif %}>В</option>
+                </select>
+            </div>
+
+            <a href="{% url 'add_khonanda' %}" class="btn-add">
+                <i class="fas fa-plus"></i> Иловаи хонанда
+            </a>
+        </form>
+    </div>
+
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h5>
+                <i class="fas fa-list"></i>
+                Рӯйхати хонандагон
+            </h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Ноҳия</th>
+                        <th>Муассиса</th>
+                        <th>Ному насаб</th>
+                        <th>Синф/Гурӯҳ</th>
+                        <th>Маблағи иҷора</th>
+                        <th>Маблағи қарз</th>
+                        <th>Китобҳо</th>
+                        <th>Амалиёт</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in khonandagon %}
+                    <tr>
+                        <td><strong>{{ forloop.counter }}</strong></td>
+                        <td>{{ student.institution.region.name|default:"-" }}</td>
+                        <td>{{ student.institution.name|default:"-" }}</td>
+                        <td><strong>{{ student.fullname }}</strong></td>
+                        <td>{{ student.class_number }}{{ student.class_latter }}</td>
+                        <td>55.00</td>
+                        <td>0.00</td>
+                        <td style="text-align: center;">
+                            <i class="fas fa-file-alt" style="color: var(--primary-blue); font-size: 1.2em;"></i>
+                        </td>
+                        <td>
+                            <div class="action-group">
+                                <a href="{% url 'student_edit' student.id %}" class="btn-edit">
+                                    <i class="fas fa-edit"></i> Тағйирдиҳӣ
+                                </a>
+                                <a href="{% url 'give_book_to_student' student.id %}" class="btn-give-book">
+                                    <i class="fas fa-book"></i> Китоб додан
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9">
+                            <div class="empty-state">
+                                <i class="fas fa-user-graduate"></i>
+                                <h4>Дар муассисаи шумо хонандае ёфт нашуд</h4>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="summary-footer">
+        <p>
+            <i class="fas fa-info-circle"></i>
+            Ҳамагӣ: <strong>{{ total_count }}</strong> хонанда
+        </p>
+    </div>
+</div>
+{% endblock content %}

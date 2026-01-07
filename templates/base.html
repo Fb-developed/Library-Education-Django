@@ -1,0 +1,452 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}Китобхона{% endblock title %}</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #34BDEE;
+            --primary-dark: #003366;
+            --text-color: #333;
+            --bg-light: #f4f7f6;
+            --bg-white: #ffffff;
+            --dropdown-dark: #2c3e50;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+
+        /* === Modern Navbar === */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 0;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-left .logo img {
+            height: 50px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        .navbar-left .title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a i {
+            font-size: 0.9rem;
+        }
+
+        /* === Dropdown Menu === */
+        .nav-item.dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: var(--dropdown-dark);
+            min-width: 220px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            overflow: hidden;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-menu .dropdown-item {
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-menu .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 25px;
+        }
+
+        .dropdown-menu .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        /* === User Profile === */
+        .user-profile {
+            margin-left: 15px;
+            position: relative;
+        }
+
+        .user-profile a {
+            color: white;
+            font-size: 1.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-profile a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* === Mobile Menu Toggle === */
+        .mobile-menu-toggle {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* === Footer === */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 15px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 30s linear infinite;
+            font-size: 0.9rem;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-200%);
+            }
+        }
+
+        /* === Responsive Design === */
+        @media (max-width: 1024px) {
+            .nav-links a {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-container {
+                padding: 12px 20px;
+            }
+
+            .navbar-left .title {
+                font-size: 0.8rem;
+            }
+
+            .navbar-left .logo img {
+                height: 40px;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--primary-dark);
+                flex-direction: column;
+                padding: 20px;
+                gap: 10px;
+                display: none;
+                box-shadow: var(--shadow-lg);
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-links li {
+                width: 100%;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 12px;
+                justify-content: flex-start;
+            }
+
+            .user-profile {
+                margin-left: 10px;
+            }
+        }
+    </style>
+
+    {% block extra_styles %}
+    {% endblock extra_styles %}
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <div class="logo">
+                    <img src="{% static 'images/logo.png' %}" alt="Нишон">
+                </div>
+                <div class="title">
+                    ВАЗОРАТИ МАОРИФ ВА ИЛМИ<br>
+                    ҶУМҲУРИИ ТОҶИКИСТОН
+                </div>
+            </div>
+            
+            <div class="navbar-right">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <ul class="nav-links" id="navLinks">
+                    <li>
+                        <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                            <i class="fas fa-home"></i>
+                            <span>Асосӣ</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'book:book_list' %}" class="{% if 'book' in request.path %}active{% endif %}">
+                            <i class="fas fa-book"></i>
+                            <span>Китобхона</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Дархости китоб</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-warehouse"></i>
+                            <span>Анбор</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Пардохтҳо</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Маълумотномаҳо</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a href="#" id="muasisaho-trigger" class="nav-link">
+                            <i class="fas fa-building"></i>
+                            <span>Муассисаҳо</span>
+                            <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: auto;"></i>
+                        </a>
+                        
+                        <div class="dropdown-menu" id="muasisaho-menu">
+                            <a href="{% url 'muasisaho_list' %}" class="dropdown-item">
+                                <i class="fas fa-list"></i>
+                                <span>Рӯйхати муассисаҳо</span>
+                            </a>
+                            <a href="{% url 'khonandagon_list' %}" class="dropdown-item">
+                                <i class="fas fa-user-graduate"></i>
+                                <span>Рӯйхати хонандагон</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="user-profile">
+                    <a href="{% url 'logout' %}" title="Баромадан">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% block content %}
+    {% endblock content %}
+
+    <footer class="bottom-bar">
+        <div class="marquee-text">
+            Диққат! Системаи идоракунии китобхона - Барои идоракунии беҳтарини китобҳо, хонандагон ва муассисаҳо. Ҳамаи маълумотҳо дар система сабт мешаванд.
+        </div>
+    </footer>
+
+    {% block extra_scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dropdown menu toggle
+            const trigger = document.getElementById('muasisaho-trigger');
+            const menu = document.getElementById('muasisaho-menu');
+
+            if (trigger) {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    menu.classList.toggle('show');
+                });
+            }
+
+            // Close dropdown when clicking outside
+            window.addEventListener('click', function(e) {
+                if (trigger && !trigger.contains(e.target) && menu && !menu.contains(e.target)) {
+                    menu.classList.remove('show');
+                }
+            });
+
+            // Mobile menu toggle
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            if (mobileToggle && navLinks) {
+                mobileToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('show');
+                    const icon = mobileToggle.querySelector('i');
+                    if (navLinks.classList.contains('show')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+        });
+    </script>
+    {% endblock extra_scripts %}
+
+</body>
+</html>

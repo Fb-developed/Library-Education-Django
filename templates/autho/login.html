@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Воридшавӣ ба барнома</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #34BDEE;
+            --primary-dark: #003366;
+            --text-color: #333;
+            --bg-light: #f4f7f6;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .header-content {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-and-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-and-title img {
+            width: 200px;
+            height: auto;
+        }
+
+        .title-text {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-transform: uppercase;
+            line-height: 1.4;
+            max-width: 300px;
+        }
+
+        .main-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .main-card h2 {
+            text-align: center;
+            color: var(--text-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .input-group-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group-wrapper:focus-within {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(52, 189, 238, 0.1);
+        }
+
+        .input-group-wrapper img {
+            width: 24px;
+            height: 24px;
+            opacity: 0.6;
+        }
+
+        .input-group-wrapper input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-color);
+            background: transparent;
+        }
+
+        .input-group-wrapper input::placeholder {
+            color: #999;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(52, 189, 238, 0.3);
+            margin-top: 10px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 189, 238, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            .main-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="header-content">
+            <div class="logo-and-title">
+                <img src="{% static 'images/logo.png' %}" alt="Нишони давлатӣ">
+            </div>
+        </div>
+        
+        <div class="main-card">
+            <h2><i class="fas fa-sign-in-alt"></i> Воридшавӣ</h2>
+            
+            {% if form.errors %}
+            <div class="error-message">
+                Логин ё рамз нодуруст аст. Лутфан дубора кӯшиш кунед.
+            </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                
+                <div class="input-group-wrapper">
+                    <img src="{% static 'images/user-solid-full (1).svg' %}" alt="User">
+                    <input type="text" id="login" name="username" placeholder="Логин" required autofocus>
+                </div>
+
+                <div class="input-group-wrapper">
+                    <img src="{% static 'images/lock-solid-full (1).svg' %}" alt="Lock">
+                    <input type="password" id="password" name="password" placeholder="Рамз" required>
+                </div>
+
+                <button type="submit" class="login-button">
+                    <i class="fas fa-sign-in-alt"></i> ВОРИДШАВӢ
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

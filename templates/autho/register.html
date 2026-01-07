@@ -1,0 +1,151 @@
+{% extends 'autho/base.html' %}
+{% load static %}
+
+{% block title %}Бақайдгирӣ{% endblock %}
+
+{% block extra_styles %}
+<style>
+    :root {
+        --primary-blue: #34BDEE;
+        --primary-dark: #003366;
+        --success-green: #28a745;
+        --text-color: #333;
+        --bg-light: #f4f7f6;
+        --white: #ffffff;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+    }
+
+    .register-container {
+        max-width: 500px;
+        margin: 0 auto;
+        background: var(--white);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .register-container h2 {
+        text-align: center;
+        color: var(--text-color);
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-color);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(52, 189, 238, 0.1);
+    }
+
+    .btn-register {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, var(--success-green), #20c997);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        margin-top: 10px;
+    }
+
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .login-link a {
+        color: var(--primary-blue);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        background: #fee;
+        color: #c33;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <h2><i class="fas fa-user-plus"></i> Бақайдгирӣ</h2>
+    
+    {% if form.errors %}
+    <div class="error-message">
+        Лутфан хатогиҳоро ислоҳ кунед ва дубора кӯшиш кунед.
+    </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <small style="color: #c33; font-size: 0.85rem; display: block; margin-top: 5px;">
+                    {{ field.errors.0 }}
+                </small>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn-register">
+            <i class="fas fa-check"></i> Бақайдгирӣ
+        </button>
+    </form>
+
+    <div class="login-link">
+        Аллакай ҳисоб доред? <a href="{% url 'login' %}">Ворид шавед</a>
+    </div>
+</div>
+{% endblock %}

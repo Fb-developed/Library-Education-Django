@@ -1,0 +1,465 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Саҳифаи Асосӣ - Китобхона{% endblock title %}
+
+{% block extra_styles %}
+<style>
+    :root {
+        --primary-blue: #34BDEE;
+        --primary-dark: #003366;
+        --success-green: #28a745;
+        --warning-orange: #ffc107;
+        --text-color: #333;
+        --text-muted: #6c757d;
+        --white: #ffffff;
+        --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+        --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .home-container {
+        max-width: 1400px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 60px 40px;
+        border-radius: 20px;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 50px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 15s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin: 0 0 15px 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section p {
+        font-size: 1.3rem;
+        opacity: 0.95;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section .hero-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 50px;
+    }
+
+    .quick-action-card {
+        background: var(--white);
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: var(--shadow-md);
+        text-decoration: none;
+        color: var(--text-color);
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--primary-blue);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .quick-action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-left-color: var(--primary-dark);
+    }
+
+    .quick-action-card .icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .quick-action-card .content h3 {
+        margin: 0 0 5px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .quick-action-card .content p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    /* Info Cards Grid */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+
+    .info-card {
+        background: var(--white);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-blue), var(--primary-dark));
+    }
+
+    .info-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .info-card .icon-container {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        padding: 25px;
+        position: relative;
+    }
+
+    .info-card .icon-container::after {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        opacity: 0.2;
+        z-index: -1;
+        animation: ripple 2s ease-out infinite;
+    }
+
+    @keyframes ripple {
+        0% { transform: scale(0.8); opacity: 0.5; }
+        100% { transform: scale(1.2); opacity: 0; }
+    }
+
+    .info-card .icon-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+    }
+
+    .info-card .icon-dark-bg {
+        background: linear-gradient(135deg, var(--primary-dark), #001a33);
+    }
+
+    .info-card h4 {
+        color: var(--text-color);
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0 0 15px 0;
+    }
+
+    .info-card p {
+        color: var(--text-muted);
+        font-size: 1rem;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    /* Stats Section */
+    .stats-section {
+        background: var(--white);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 50px;
+    }
+
+    .stats-section h2 {
+        text-align: center;
+        color: var(--text-color);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .stat-item .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-bottom: 10px;
+    }
+
+    .stat-item .stat-label {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Footer Links */
+    .footer-links {
+        text-align: center;
+        padding: 40px;
+        background: var(--white);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+    }
+
+    .footer-links a {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: var(--primary-blue);
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 15px 35px;
+        border: 2px solid var(--primary-blue);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, transparent, transparent);
+    }
+
+    .footer-links a:hover {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(52, 189, 238, 0.4);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .home-container {
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .hero-section {
+            padding: 40px 25px;
+        }
+
+        .hero-section h1 {
+            font-size: 2rem;
+        }
+
+        .hero-section p {
+            font-size: 1rem;
+        }
+
+        .hero-section .hero-icon {
+            font-size: 3rem;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="home-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-icon">
+            <i class="fas fa-book-reader"></i>
+        </div>
+        <h1>Системаи Китобхона</h1>
+        <p>Барои идоракунии беҳтарини китобҳо, хонандагон ва муассисаҳо</p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="{% url 'book:book_list' %}" class="quick-action-card">
+            <div class="icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="content">
+                <h3>Китобхона</h3>
+                <p>Идоракунии китобҳо</p>
+            </div>
+        </a>
+        
+        <a href="{% url 'khonandagon_list' %}" class="quick-action-card">
+            <div class="icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="content">
+                <h3>Хонандагон</h3>
+                <p>Рӯйхати хонандагон</p>
+            </div>
+        </a>
+        
+        <a href="{% url 'muasisaho_list' %}" class="quick-action-card">
+            <div class="icon" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="content">
+                <h3>Муассисаҳо</h3>
+                <p>Рӯйхати муассисаҳо</p>
+            </div>
+        </a>
+        
+        <a href="{% url 'book:add_book' %}" class="quick-action-card">
+            <div class="icon" style="background: linear-gradient(135deg, #dc3545, #c82333);">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <div class="content">
+                <h3>Иловаи китоб</h3>
+                <p>Китоби нав илова кунед</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="icon-container">
+                <img src="{% static 'images/library.png' %}" alt="Китобҳо">
+            </div>
+            <h4>Идоракунии Китобҳо</h4>
+            <p>Дар ин барнома шумораи китобҳо, воридшуди ва тақсимоти онҳо ба қайд гирифта мешавад. Шумо метавонед китобҳоро илова кунед, тағйир диҳед ва идора кунед.</p>
+        </div>
+
+        <div class="info-card">
+            <div class="icon-container">
+                <img src="{% static 'images/payment.png' %}" alt="Пардохтҳо">
+            </div>
+            <h4>Пардохтҳо</h4>
+            <p>Тамоми пардохтҳои маблағҳои иҷораи китоб ва маблағҳои атестат дар барнома сабт мешавад. Идоракунии пардохтҳо ва қарзҳо.</p>
+        </div>
+
+        <div class="info-card">
+            <div class="icon-container icon-dark-bg">
+                <img src="{% static 'images/reports.png' %}" alt="Ҳисоботҳо">
+            </div>
+            <h4>Ҳисоботҳо</h4>
+            <p>Ин барнома барои ҳисоботҳои гуногун пешбинӣ шудааст. Ҳисоботҳои китобҳо, хонандагон ва муассисаҳо.</p>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <h2><i class="fas fa-chart-line"></i> Омори Система</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Китобҳо</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Хонандагон</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Муассисаҳо</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Иҷораҳо</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="footer-links">
+        <a href="#">
+            <i class="fas fa-file-pdf"></i>
+            Дастурамали корбарӣ
+        </a>
+    </div>
+</div>
+{% endblock content %}
