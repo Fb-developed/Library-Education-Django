@@ -55,9 +55,20 @@ class BookLoan(models.Model):
 
 
 class BookPriceFactor(models.Model):
-    label = models.CharField(max_length=255)
-    factor = models.FloatField()
+    label = models.CharField(max_length=255, verbose_name="Номгу")
+    factor = models.FloatField(verbose_name="Фоиз аз нархи китоб")
+    description = models.TextField(blank=True, null=True, verbose_name="Шарҳу эзоҳ")
     created_at = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        verbose_name = "Фоизнокии иҷораи китоб"
+        verbose_name_plural = "Фоизнокии иҷораи китоб"
+        ordering = ['-factor', 'label']
+
     def __str__(self):
-        return f"{self.label} ({self.factor})"
+        return f"{self.label} ({self.factor * 100:.2f}%)"
+    
+    @property
+    def percentage(self):
+        """Returns factor as percentage"""
+        return self.factor * 100

@@ -2,7 +2,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404 # ⬅️ get_object_or_404-ро ИЛОВА КУНЕД
 from django.contrib.auth.decorators import login_required
-from .models import Book 
+from .models import Book, BookPriceFactor 
 from .forms import BookForm  # ⬅️ ❗️ ИН САТРРО ИЛОВА КУНЕД ❗️
 from django.http import HttpResponse # ⬅️ ❗️ ИН САТРРО ИЛОВА КУНЕД ❗️
 
@@ -13,8 +13,22 @@ from django.http import HttpResponse # ⬅️ ❗️ ИН САТРРО ИЛОВ�
 
 @login_required
 def book_list_view(request):
-    # ...
     user_institution = request.user.institution
+    
+    if not user_institution:
+        # Агар корбар муассиса надошта бошад
+        context = {
+            'books': [],
+            'all_sinfs': [],
+            'all_years': [],
+            'selected_sinf': None,
+            'selected_year': None,
+            'total_books_count': 0,
+            'total_available': 0,
+            'total_deleted': 0,
+            'user_institution_name': "Номаълум",
+        }
+        return render(request, 'dashboard/book_list.html', context)
     
     # Филтри асосӣ ва фармоиш: Истифодаи class_number ба ҷои sinf
     books = Book.objects.filter(institution=user_institution).order_by('class_number', 'name')
@@ -79,23 +93,38 @@ def add_book_view(request):
             # 1. Муассисаро илова кунед
             book.institution = request.user.institution
             
-            # 2. ❗️ ИСЛОҲ: Боқимондаро ба шумораи умумӣ баробар кунед ❗️
-            # Ин қисматро илова кунед:
+            # 2. Барои илова, ҳамеша боқимонда ба шумораи умумӣ баробар аст
+            # quantity_available-ро аз форма гирифтан лозим нест, зеро он хориҷ карда шудааст
             book.quantity_available = book.quantity_total
             
-            book.save()
-            return redirect('book:book_list')
+            try:
+                book.save()
+                return redirect('book:book_list')
+            except Exception as e:
+                # Агар хатогӣ рух диҳад, формаро бо хабар боз нишон диҳед
+                context = {
+                    'form': form,
+                    'page_title': 'Иловаи китоби нав',
+                    'update': False,
+                    'error': f"Хатогӣ: {str(e)}"
+                }
+                return render(request, 'dashboard/add_book_form.html', context)
         else:
-            # Маслиҳат: Барои санҷиш хатогиҳоро чоп кунед
-            # print("Хатогиҳои Форма:", form.errors) 
-            pass # Агар хатогие набошад, танҳо формаро боз рендер мекунад
+            # Форма нодуруст аст, бо хатогиҳо боз нишон диҳед
+            context = {
+                'form': form,
+                'page_title': 'Иловаи китоби нав',
+                'update': False
+            }
+            return render(request, 'dashboard/add_book_form.html', context)
 
     else:
         form = BookForm()
 
     context = {
         'form': form,
-        'page_title': 'Иловаи китоби нав'
+        'page_title': 'Иловаи китоби нав',
+        'update': False
     }
     return render(request, 'dashboard/add_book_form.html', context)
 
@@ -143,3 +172,17 @@ def update_book_view(request, pk):
     }
     # Мо ҳамон шаблони add_book_form.html-ро истифода мебарем
     return render(request, 'dashboard/add_book_form.html', context)
+
+
+@login_required
+def book_price_factor_list_view(request):
+    """View барои нишон додани рӯйхати фоизнокии иҷораи китоб"""
+    # Гирифтани ҳамаи фоизнокиҳо бо фармоиши мувофиқ
+    # Аввал бо фоиз нисбӣ (factor) фармоиш медиҳем, сипас бо ном
+    price_factors = BookPriceFactor.objects.all().order_by('-factor', 'label')
+    
+    context = {
+        'price_factors': price_factors,
+        'total_count': price_factors.count(),
+    }
+    return render(request, 'dashboard/book_price_factors.html', context)

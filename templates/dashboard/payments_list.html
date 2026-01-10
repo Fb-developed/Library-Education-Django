@@ -1,0 +1,456 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Рӯйхати Пардохтҳо{% endblock title %}
+
+{% block extra_styles %}
+<style>
+    :root {
+        --primary-blue: #34BDEE;
+        --primary-dark: #003366;
+        --success-green: #28a745;
+        --warning-orange: #ffc107;
+        --text-color: #333;
+        --bg-light: #f4f7f6;
+        --white: #ffffff;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .payments-container {
+        max-width: 1600px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 30px 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* Filter Section */
+    .filter-card {
+        background: var(--white);
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .filter-card h5 {
+        color: var(--text-color);
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        align-items: end;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(52, 189, 238, 0.1);
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 10px;
+        align-items: end;
+    }
+
+    .btn-filter {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(52, 189, 238, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(52, 189, 238, 0.4);
+    }
+
+    .btn-clear {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-clear:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+
+    /* Table Section */
+    .table-wrapper {
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        color: white;
+        padding: 20px 25px;
+    }
+
+    .table-header h5 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .table {
+        margin: 0;
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .table thead {
+        background: var(--bg-light);
+    }
+
+    .table thead th {
+        color: var(--text-color);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        padding: 12px 10px;
+        border-bottom: 2px solid #e0e0e0;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9ff;
+    }
+
+    .table tbody td {
+        padding: 12px 10px;
+        vertical-align: middle;
+        color: var(--text-color);
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-paid {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-unpaid {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .amount-cell {
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .transaction-icon {
+        color: var(--primary-blue);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .transaction-icon:hover {
+        color: var(--primary-dark);
+        transform: scale(1.1);
+    }
+
+    .summary-footer {
+        background: var(--white);
+        padding: 20px 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .summary-footer p {
+        margin: 0;
+        color: var(--text-color);
+        font-size: 1rem;
+    }
+
+    .summary-footer strong {
+        color: var(--primary-blue);
+        font-size: 1.1rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 1200px) {
+        .filter-row {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .payments-container {
+            margin: 15px auto;
+            padding: 0 15px;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        .table {
+            min-width: 1400px;
+        }
+        .filter-actions {
+            flex-direction: column;
+        }
+        .btn-filter, .btn-clear {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="payments-container">
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-money-bill-wave"></i>
+            Рӯйхати Пардохтҳо
+        </h1>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-card">
+        <h5>
+            <i class="fas fa-filter"></i>
+            Филтр ва Ҷустуҷӯ
+        </h5>
+        <form method="GET" action="{% url 'payments_list' %}" class="filter-row">
+            <div class="form-group">
+                <label for="status"><i class="fas fa-check-circle"></i> Статус:</label>
+                <select id="status" name="status">
+                    <option value="">Ҳама статусҳо</option>
+                    <option value="paid" {% if selected_status == 'paid' %}selected{% endif %}>Пардохт шуда</option>
+                    <option value="unpaid" {% if selected_status == 'unpaid' %}selected{% endif %}>Пардохт нашуда</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="class"><i class="fas fa-graduation-cap"></i> Синф:</label>
+                <select id="class" name="class">
+                    <option value="">Ҳама синфҳо</option>
+                    {% for class_num in all_classes %}
+                    <option value="{{ class_num }}" {% if selected_class|stringformat:"s" == class_num|stringformat:"s" %}selected{% endif %}>
+                        {{ class_num }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="group"><i class="fas fa-users"></i> Гурӯҳ:</label>
+                <input type="text" id="group" name="group" placeholder="А, Б, В..." value="{{ selected_group }}">
+            </div>
+
+            <div class="form-group">
+                <label for="payment_number"><i class="fas fa-hashtag"></i> Рақами пардохт:</label>
+                <input type="text" id="payment_number" name="payment_number" placeholder="2571168851" value="{{ selected_payment_number }}">
+            </div>
+
+            <div class="form-group">
+                <label for="student"><i class="fas fa-user"></i> Хонанда:</label>
+                <input type="text" id="student" name="student" placeholder="Ному насаб" value="{{ selected_student }}">
+            </div>
+
+            <div class="form-group">
+                <label for="date_from"><i class="fas fa-calendar-alt"></i> Аз санаи:</label>
+                <input type="date" id="date_from" name="date_from" value="{{ date_from }}">
+            </div>
+
+            <div class="form-group">
+                <label for="date_to"><i class="fas fa-calendar-alt"></i> То санаи:</label>
+                <input type="date" id="date_to" name="date_to" value="{{ date_to }}">
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn-filter">
+                    <i class="fas fa-filter"></i> Филтр
+                </button>
+                <a href="{% url 'payments_list' %}" class="btn-clear">
+                    <i class="fas fa-times"></i> Тоза кардан
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h5>
+                <i class="fas fa-list"></i>
+                Рӯйхати пардохтҳо
+            </h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Рақами пардохт</th>
+                        <th>Сана</th>
+                        <th>Ноҳия</th>
+                        <th>Муассиса</th>
+                        <th>Хонанда</th>
+                        <th>Статус</th>
+                        <th>Маблағи умумии иҷораи китоб</th>
+                        <th>2%-и шуъбаи маориф</th>
+                        <th>Маблағи муассиса</th>
+                        <th>Маблағи пардохт</th>
+                        <th>Санаи пардохти охирон</th>
+                        <th>Транзакцияҳо</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td><strong>{{ payment.invoice_code }}</strong></td>
+                        <td>{{ payment.created_at|date:"d.m.Y" }}</td>
+                        <td>{{ payment.loan.institution.region.name|default:"-" }}</td>
+                        <td>{{ payment.loan.institution.name|default:"-" }}</td>
+                        <td><strong>{{ payment.loan.student.fullname }}</strong></td>
+                        <td>
+                            {% if payment.status %}
+                            <span class="status-badge status-paid">
+                                <i class="fas fa-check-circle"></i> Пардохт шуда
+                            </span>
+                            {% else %}
+                            <span class="status-badge status-unpaid">
+                                <i class="fas fa-times-circle"></i> Пардохт нашуда
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="amount-cell">{{ payment.amount_total|floatformat:2 }} сом.</td>
+                        <td class="amount-cell">{{ payment.maorif_percent|floatformat:2 }} сом.</td>
+                        <td class="amount-cell">{{ payment.institution_amount|floatformat:2 }} сом.</td>
+                        <td class="amount-cell"><strong>{{ payment.paid_amount|floatformat:2 }} сом.</strong></td>
+                        <td>
+                            {% if payment.status %}
+                                {{ payment.created_at|date:"d.m.Y H:i" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center;">
+                            <i class="fas fa-file-alt transaction-icon" title="Рӯйхати транзакцияҳо"></i>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="12">
+                            <div class="empty-state">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <h4>Пардохт ёфт нашуд</h4>
+                                <p>Дар ин мӯҳлат пардохте мавҷуд нест.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="summary-footer">
+        <p>
+            <i class="fas fa-info-circle"></i>
+            Ҳамагӣ: <strong>{{ total_count }}</strong> пардохт
+        </p>
+    </div>
+</div>
+{% endblock content %}

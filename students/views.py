@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.utils import timezone
 from datetime import datetime, timedelta
-from .models import Institution, Student # Фарз мекунем, ки моделҳо дар ин ҷо ҳастанд, агар не, онро дуруст import кунед!
+from .models import Institution, Student, Region # Фарз мекунем, ки моделҳо дар ин ҷо ҳастанд, агар не, онро дуруст import кунед!
 from book.models import Book, BookLoan
 
 
@@ -341,3 +341,27 @@ def give_book_to_student_view(request, pk):
         'year_of_use': datetime.now().year,
     }
     return render(request, 'dashboard/give_book_to_student.html', context)
+
+
+@login_required
+def regions_list_view(request):
+    """View барои нишон додани рӯйхати ноҳияҳо"""
+    all_regions = Region.objects.all().order_by('name')
+    
+    context = {
+        'regions': all_regions,
+        'total_count': all_regions.count(),
+    }
+    return render(request, 'dashboard/regions_list.html', context)
+
+
+@login_required
+def education_departments_list_view(request):
+    """View барои нишон додани рӯйхати шуъбаҳои маориф"""
+    # Барои ҳозир, рӯйхати холӣ бармегардонем
+    # Агар модел мавҷуд бошад, онро истифода баред
+    context = {
+        'departments': [],
+        'total_count': 0,
+    }
+    return render(request, 'dashboard/education_departments_list.html', context)

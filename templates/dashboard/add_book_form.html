@@ -169,6 +169,12 @@
 
         {% csrf_token %}
         
+        {% if error %}
+            <div class="alert-danger">
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+        
         {% if form.non_field_errors %}
             <div class="alert-danger">
                 {% for error in form.non_field_errors %}
@@ -222,12 +228,26 @@
                 <small class="text-danger d-block" style="color: #c33; font-size: 0.85rem; margin-top: 5px;">{{ error }}</small>
             {% endfor %}
             
-            {% if update %}
+            {% if not update %}
+                <small class="text-muted">
+                    Шумораи боқимонда ба таври худкор ба шумораи умумӣ баробар карда мешавад.
+                </small>
+            {% else %}
                 <small class="text-muted">
                     Шумораи боқимондаи ҳозира: <strong>{{ book_instance.quantity_available }}</strong>
                 </small>
             {% endif %}
         </div>
+
+        {% if update %}
+        <div class="form-group">
+            <label>{{ form.quantity_available.label }}:</label>
+            {{ form.quantity_available|add_class:"form-control" }}
+            {% for error in form.quantity_available.errors %}
+                <small class="text-danger d-block" style="color: #c33; font-size: 0.85rem; margin-top: 5px;">{{ error }}</small>
+            {% endfor %}
+        </div>
+        {% endif %}
 
         <div class="form-actions">
             <a href="{% url 'book:book_list' %}" class="btn-secondary">

@@ -318,10 +318,6 @@
                 <div class="logo">
                     <img src="{% static 'images/logo.png' %}" alt="Нишон">
                 </div>
-                <div class="title">
-                    ВАЗОРАТИ МАОРИФ ВА ИЛМИ<br>
-                    ҶУМҲУРИИ ТОҶИКИСТОН
-                </div>
             </div>
             
             <div class="navbar-right">
@@ -355,16 +351,32 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'payments_list' %}">
                             <i class="fas fa-money-bill-wave"></i>
                             <span>Пардохтҳо</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
+                    <li class="nav-item dropdown">
+                        <a href="#" id="maalumotnoma-trigger" class="nav-link">
                             <i class="fas fa-file-alt"></i>
                             <span>Маълумотномаҳо</span>
+                            <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: auto;"></i>
                         </a>
+                        
+                        <div class="dropdown-menu" id="maalumotnoma-menu">
+                            <a href="{% url 'categories' %}" class="dropdown-item">
+                                <i class="fas fa-percentage"></i>
+                                <span>Фоизнокии иҷораи китоб</span>
+                            </a>
+                            <a href="{% url 'regions_list' %}" class="dropdown-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Ноҳияҳо</span>
+                            </a>
+                            <a href="{% url 'education_departments_list' %}" class="dropdown-item">
+                                <i class="fas fa-university"></i>
+                                <span>Шуъбаҳои маориф</span>
+                            </a>
+                        </div>
                     </li>
                     
                     <li class="nav-item dropdown">
@@ -408,22 +420,41 @@
     {% block extra_scripts %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Dropdown menu toggle
-            const trigger = document.getElementById('muasisaho-trigger');
-            const menu = document.getElementById('muasisaho-menu');
+            // Dropdown menu toggles
+            const muasisahoTrigger = document.getElementById('muasisaho-trigger');
+            const muasisahoMenu = document.getElementById('muasisaho-menu');
+            const maalumotnomaTrigger = document.getElementById('maalumotnoma-trigger');
+            const maalumotnomaMenu = document.getElementById('maalumotnoma-menu');
 
-            if (trigger) {
-                trigger.addEventListener('click', function(e) {
+            // Muassisaho dropdown
+            if (muasisahoTrigger) {
+                muasisahoTrigger.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    menu.classList.toggle('show');
+                    muasisahoMenu.classList.toggle('show');
+                    // Close other dropdowns
+                    if (maalumotnomaMenu) maalumotnomaMenu.classList.remove('show');
                 });
             }
 
-            // Close dropdown when clicking outside
+            // Maalumotnoma dropdown
+            if (maalumotnomaTrigger) {
+                maalumotnomaTrigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    maalumotnomaMenu.classList.toggle('show');
+                    // Close other dropdowns
+                    if (muasisahoMenu) muasisahoMenu.classList.remove('show');
+                });
+            }
+
+            // Close dropdowns when clicking outside
             window.addEventListener('click', function(e) {
-                if (trigger && !trigger.contains(e.target) && menu && !menu.contains(e.target)) {
-                    menu.classList.remove('show');
+                if (muasisahoTrigger && !muasisahoTrigger.contains(e.target) && muasisahoMenu && !muasisahoMenu.contains(e.target)) {
+                    muasisahoMenu.classList.remove('show');
+                }
+                if (maalumotnomaTrigger && !maalumotnomaTrigger.contains(e.target) && maalumotnomaMenu && !maalumotnomaMenu.contains(e.target)) {
+                    maalumotnomaMenu.classList.remove('show');
                 }
             });
 
