@@ -4,10 +4,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse
+from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime, timedelta
 from .models import Institution, Student, Region # Фарз мекунем, ки моделҳо дар ин ҷо ҳастанд, агар не, онро дуруст import кунед!
-from book.models import Book, BookLoan
+from book.models import Book, BookLoan, BookPriceFactor
+from inovice.models import Invoice
 
 
 # --- [НАВСОЗӢ] View барои Муассисаҳо ---
@@ -268,7 +270,7 @@ def give_book_to_student_view(request, pk):
     student_loans = BookLoan.objects.filter(
         student=student,
         institution=user_institution
-    ).select_related('book').order_by('-loan_date')
+    ).select_related('book').prefetch_related('invoices').order_by('-loan_date')
     
     if request.method == 'POST':
         book_id = request.POST.get('book_id')
@@ -283,11 +285,20 @@ def give_book_to_student_view(request, pk):
             # Тафтиш кардан, ки китоб дастрас аст
             if book.quantity_available <= 0:
                 raise ValueError("Ин китоб дастрас нест.")
+
+            has_active_loan = BookLoan.objects.filter(
+                book=book,
+                student=student,
+                return_date__gte=timezone.now()
+            ).exists()
+            if has_active_loan:
+                raise ValueError("Ин китоб аллакай ба хонанда дода шудааст.")
             
             # Ҳисоб кардани маблағи иҷора
-            # Фарз мекунем, ки маблағи иҷора = нархи китоб * фактори иҷора
-            # Барои соддатарин, маблағи иҷораро ба нархи китоб баробар мегирем
-            calculated_price = book.price
+            maorif_percent = BookPriceFactor.lookup_percent(book.price, book.year)
+            institution_percent = user_institution.institution_percent or 0
+            total_percent = maorif_percent + institution_percent
+            calculated_price = book.price * total_percent / 100 if total_percent else 0
             
             # Ҳисоб кардани санаҳо
             loan_date = timezone.now()
@@ -306,13 +317,28 @@ def give_book_to_student_view(request, pk):
                 year_of_use=int(year_of_use) if year_of_use else datetime.now().year,
                 calculated_price=calculated_price,
             )
+
+            maorif_amount = book.price * maorif_percent / 100 if maorif_percent else 0
+            institution_amount = calculated_price - maorif_amount
+
+            Invoice.objects.create(
+                name=student.fullname,
+                invoice_code=Invoice.generate_invoice_code(),
+                amount_total=calculated_price,
+                maorif_percent=maorif_amount,
+                institution_amount=institution_amount,
+                paid_amount=0,
+                status=False,
+                loan=loan,
+            )
             
             # Кам кардани миқдори боқимондаи китоб
             book.quantity_available -= 1
             book.save()
             
             # Пас аз сабти муваффақ, ба рӯйхати хонандагон равона кунед
-            return redirect('khonandagon_list')
+            messages.success(request, "Китоб бомуваффақият дода шуд ва ҳисобнома эҷод гардид.")
+            return redirect('give_book_to_student', pk=student.id)
             
         except ValueError as e:
             context = {

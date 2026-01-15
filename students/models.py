@@ -16,6 +16,7 @@ class Institution(models.Model):
     address = models.TextField(blank=True, null=True)
     phone = models.CharField(max_length=50, blank=True, null=True)
     year = models.IntegerField()
+    institution_percent = models.FloatField(default=0, verbose_name="Фоизи муассиса")
     status = models.BooleanField(default=False)
     type = models.CharField(max_length=255)
     created_at = models.DateTimeField(default=timezone.now)

@@ -340,6 +340,9 @@
                                 <a href="{% url 'give_book_to_student' student.id %}" class="btn-give-book">
                                     <i class="fas fa-book"></i> Китоб додан
                                 </a>
+                                <a href="{% url 'payments_list' %}?student_id={{ student.id }}" class="btn-give-book" style="background:#6f42c1;">
+                                    <i class="fas fa-money-bill-wave"></i> Пардохтҳо
+                                </a>
                             </div>
                         </td>
                     </tr>

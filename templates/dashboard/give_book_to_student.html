@@ -153,6 +153,16 @@
         text-align: center;
     }
 
+    .success-message {
+        background: #e6f7ed;
+        color: #155724;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+        border: 1px solid #c3e6cb;
+    }
+
     .loans-section {
         background: var(--white);
         padding: 40px;
@@ -243,6 +253,14 @@
         </div>
     </div>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="success-message">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="form-card">
         <h2>
             <i class="fas fa-plus-circle"></i>
@@ -315,6 +333,7 @@
                         <th>Санаи иҷора</th>
                         <th>Санаи бозгашт</th>
                         <th>Маблағи иҷора</th>
+                        <th>Пардохтҳо</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -326,6 +345,11 @@
                         <td>{{ loan.loan_date|date:"d.m.Y" }}</td>
                         <td>{{ loan.return_date|date:"d.m.Y" }}</td>
                         <td><strong>{{ loan.calculated_price|floatformat:2 }} сом.</strong></td>
+                        <td>
+                            <a href="{% url 'payments_list' %}?loan_id={{ loan.id }}" class="btn-submit" style="padding:6px 12px; font-size:0.85rem;">
+                                <i class="fas fa-money-bill-wave"></i> Пардохтҳо
+                            </a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
