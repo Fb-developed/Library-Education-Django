@@ -3,481 +3,278 @@
 <html lang="tg">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>{% block title %}Китобхона{% endblock title %}</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Панели идоракунӣ{% endblock title %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         :root {
-            --primary-blue: #34BDEE;
-            --primary-dark: #003366;
-            --text-color: #333;
-            --bg-light: #f4f7f6;
-            --bg-white: #ffffff;
-            --dropdown-dark: #2c3e50;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --brand-900: #0f172a;
+            --brand-700: #1e40af;
+            --brand-500: #2563eb;
+            --brand-100: #e0ecff;
+            --surface: #ffffff;
+            --muted: #6b7280;
+            --bg: #f5f7fb;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: var(--text-color);
-            padding-bottom: 80px;
+            background: var(--bg);
+            color: #1f2937;
+            font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        }
+
+        .app-wrapper {
+            display: flex;
             min-height: 100vh;
         }
 
-        /* === Modern Navbar === */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 0;
-            box-shadow: var(--shadow-md);
+        .sidebar {
+            width: 270px;
+            background: linear-gradient(180deg, var(--brand-900), #111827 70%);
+            color: #e5e7eb;
+            padding: 28px 20px;
             position: sticky;
             top: 0;
-            z-index: 1000;
+            height: 100vh;
         }
 
-        .navbar-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar-left {
+        .sidebar-brand {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 12px;
+            margin-bottom: 32px;
         }
 
-        .navbar-left .logo img {
-            height: 50px;
-            width: auto;
-            filter: brightness(0) invert(1);
-        }
-
-        .navbar-left .title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            line-height: 1.3;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .nav-links li {
-            position: relative;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 10px 18px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .nav-links a.active {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .nav-links a i {
-            font-size: 0.9rem;
-        }
-
-        /* === Dropdown Menu === */
-        .nav-item.dropdown {
-            position: relative;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            background: var(--dropdown-dark);
-            min-width: 220px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            overflow: hidden;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .dropdown-menu .dropdown-item {
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dropdown-menu .dropdown-item:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-menu .dropdown-item:hover {
+        .sidebar-brand img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
             background: rgba(255, 255, 255, 0.1);
-            padding-left: 25px;
+            border-radius: 12px;
+            padding: 6px;
         }
 
-        .dropdown-menu .dropdown-item i {
-            width: 20px;
+        .sidebar-brand .title {
+            font-weight: 700;
+            font-size: 1rem;
+            line-height: 1.2;
+        }
+
+        .sidebar-section {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        .sidebar .nav-link {
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link i {
+            width: 18px;
             text-align: center;
         }
 
-        .dropdown-menu.show {
-            display: block;
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: #ffffff;
         }
 
-        /* === User Profile === */
-        .user-profile {
-            margin-left: 15px;
-            position: relative;
+        .sidebar .nav-divider {
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            margin: 18px 0;
         }
 
-        .user-profile a {
-            color: white;
-            font-size: 1.8rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
+        .app-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: var(--surface);
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+            padding: 18px 28px;
             display: flex;
             align-items: center;
-            padding: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            justify-content: space-between;
+            gap: 16px;
         }
 
-        .user-profile a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+        .page-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
         }
 
-        /* === Mobile Menu Toggle === */
-        .mobile-menu-toggle {
-            display: none;
-            background: rgba(255, 255, 255, 0.1);
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-pill {
+            background: var(--brand-100);
+            color: var(--brand-700);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .content {
+            padding: 28px;
+        }
+
+        .card {
             border: none;
-            color: white;
-            font-size: 1.5rem;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            border-radius: 18px;
         }
 
-        /* === Footer === */
-        .bottom-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 15px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 999;
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 18px 24px;
+            font-weight: 600;
         }
 
-        .marquee-text {
-            display: inline-block;
-            padding-left: 100%;
-            animation: marquee 30s linear infinite;
-            font-size: 0.9rem;
+        .stat-card {
+            background: var(--surface);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
         }
 
-        @keyframes marquee {
-            0% {
+        .stat-card h3 {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .icon-pill {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-100);
+            color: var(--brand-700);
+        }
+
+        .badge-soft {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--brand-700);
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                position: fixed;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1030;
+            }
+
+            body.sidebar-open .sidebar {
                 transform: translateX(0);
             }
-            100% {
-                transform: translateX(-200%);
-            }
-        }
 
-        /* === Responsive Design === */
-        @media (max-width: 1024px) {
-            .nav-links a {
-                font-size: 0.85rem;
-                padding: 8px 12px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar-container {
-                padding: 12px 20px;
-            }
-
-            .navbar-left .title {
-                font-size: 0.8rem;
-            }
-
-            .navbar-left .logo img {
-                height: 40px;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .nav-links {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--primary-dark);
-                flex-direction: column;
+            .content {
                 padding: 20px;
-                gap: 10px;
-                display: none;
-                box-shadow: var(--shadow-lg);
-            }
-
-            .nav-links.show {
-                display: flex;
-            }
-
-            .nav-links li {
-                width: 100%;
-            }
-
-            .nav-links a {
-                width: 100%;
-                padding: 12px;
-                justify-content: flex-start;
-            }
-
-            .user-profile {
-                margin-left: 10px;
             }
         }
     </style>
-
-    {% block extra_styles %}
-    {% endblock extra_styles %}
+    {% block extra_styles %}{% endblock extra_styles %}
 </head>
 <body>
+<div class="app-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="{% static 'images/logo.png' %}" alt="Нишон">
+            <div class="title">Маркази идоракунии китобхона</div>
+        </div>
+        <div class="sidebar-section">Навигатсия</div>
+        <nav class="nav flex-column">
+            <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                <i class="fas fa-house"></i> Асосӣ
+            </a>
+            <a href="{% url 'book:book_list' %}" class="nav-link {% if 'book' in request.path %}active{% endif %}">
+                <i class="fas fa-book"></i> Китобҳо
+            </a>
+            <a href="{% url 'khonandagon_list' %}" class="nav-link {% if 'khonandagon' in request.path %}active{% endif %}">
+                <i class="fas fa-user-graduate"></i> Хонандагон
+            </a>
+            <a href="{% url 'muasisaho_list' %}" class="nav-link {% if 'muasisaho' in request.path %}active{% endif %}">
+                <i class="fas fa-building"></i> Муассисаҳо
+            </a>
+            <a href="{% url 'payments_list' %}" class="nav-link {% if 'payments' in request.path %}active{% endif %}">
+                <i class="fas fa-credit-card"></i> Пардохтҳо
+            </a>
+        </nav>
+        <div class="nav-divider"></div>
+        <div class="sidebar-section">Маълумотномаҳо</div>
+        <nav class="nav flex-column">
+            <a href="{% url 'categories' %}" class="nav-link">
+                <i class="fas fa-percent"></i> Фоизҳо
+            </a>
+            <a href="{% url 'regions_list' %}" class="nav-link">
+                <i class="fas fa-map"></i> Ноҳияҳо
+            </a>
+            <a href="{% url 'education_departments_list' %}" class="nav-link">
+                <i class="fas fa-school"></i> Шуъбаҳои маориф
+            </a>
+        </nav>
+    </aside>
 
-    <header class="navbar">
-        <div class="navbar-container">
-            <div class="navbar-left">
-                <div class="logo">
-                    <img src="{% static 'images/logo.png' %}" alt="Нишон">
-                </div>
-            </div>
-            
-            <div class="navbar-right">
-                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+    <div class="app-main">
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-outline-secondary d-lg-none" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                
-                <ul class="nav-links" id="navLinks">
-                    <li>
-                        <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
-                            <i class="fas fa-home"></i>
-                            <span>Асосӣ</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'book:book_list' %}" class="{% if 'book' in request.path %}active{% endif %}">
-                            <i class="fas fa-book"></i>
-                            <span>Китобхона</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Дархости китоб</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-warehouse"></i>
-                            <span>Анбор</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'payments_list' %}">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <span>Пардохтҳо</span>
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" id="maalumotnoma-trigger" class="nav-link">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Маълумотномаҳо</span>
-                            <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: auto;"></i>
-                        </a>
-                        
-                        <div class="dropdown-menu" id="maalumotnoma-menu">
-                            <a href="{% url 'categories' %}" class="dropdown-item">
-                                <i class="fas fa-percentage"></i>
-                                <span>Фоизнокии иҷораи китоб</span>
-                            </a>
-                            <a href="{% url 'regions_list' %}" class="dropdown-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Ноҳияҳо</span>
-                            </a>
-                            <a href="{% url 'education_departments_list' %}" class="dropdown-item">
-                                <i class="fas fa-university"></i>
-                                <span>Шуъбаҳои маориф</span>
-                            </a>
-                        </div>
-                    </li>
-                    
-                    <li class="nav-item dropdown">
-                        <a href="#" id="muasisaho-trigger" class="nav-link">
-                            <i class="fas fa-building"></i>
-                            <span>Муассисаҳо</span>
-                            <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: auto;"></i>
-                        </a>
-                        
-                        <div class="dropdown-menu" id="muasisaho-menu">
-                            <a href="{% url 'muasisaho_list' %}" class="dropdown-item">
-                                <i class="fas fa-list"></i>
-                                <span>Рӯйхати муассисаҳо</span>
-                            </a>
-                            <a href="{% url 'khonandagon_list' %}" class="dropdown-item">
-                                <i class="fas fa-user-graduate"></i>
-                                <span>Рӯйхати хонандагон</span>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-                
-                <div class="user-profile">
-                    <a href="{% url 'logout' %}" title="Баромадан">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </a>
-                </div>
+                <h1 class="page-title">{% block page_title %}Панели идоракунӣ{% endblock page_title %}</h1>
             </div>
-        </div>
-    </header>
+            <div class="topbar-actions">
+                <span class="user-pill">{{ request.user.get_full_name|default:request.user.username }}</span>
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-sign-out-alt"></i> Баромадан
+                </a>
+            </div>
+        </header>
 
-    {% block content %}
-    {% endblock content %}
+        <main class="content">
+            {% block content %}{% endblock content %}
+        </main>
+    </div>
+</div>
 
-    <footer class="bottom-bar">
-        <div class="marquee-text">
-            Диққат! Системаи идоракунии китобхона - Барои идоракунии беҳтарини китобҳо, хонандагон ва муассисаҳо. Ҳамаи маълумотҳо дар система сабт мешаванд.
-        </div>
-    </footer>
-
-    {% block extra_scripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Dropdown menu toggles
-            const muasisahoTrigger = document.getElementById('muasisaho-trigger');
-            const muasisahoMenu = document.getElementById('muasisaho-menu');
-            const maalumotnomaTrigger = document.getElementById('maalumotnoma-trigger');
-            const maalumotnomaMenu = document.getElementById('maalumotnoma-menu');
-
-            // Muassisaho dropdown
-            if (muasisahoTrigger) {
-                muasisahoTrigger.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    muasisahoMenu.classList.toggle('show');
-                    // Close other dropdowns
-                    if (maalumotnomaMenu) maalumotnomaMenu.classList.remove('show');
-                });
-            }
-
-            // Maalumotnoma dropdown
-            if (maalumotnomaTrigger) {
-                maalumotnomaTrigger.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    maalumotnomaMenu.classList.toggle('show');
-                    // Close other dropdowns
-                    if (muasisahoMenu) muasisahoMenu.classList.remove('show');
-                });
-            }
-
-            // Close dropdowns when clicking outside
-            window.addEventListener('click', function(e) {
-                if (muasisahoTrigger && !muasisahoTrigger.contains(e.target) && muasisahoMenu && !muasisahoMenu.contains(e.target)) {
-                    muasisahoMenu.classList.remove('show');
-                }
-                if (maalumotnomaTrigger && !maalumotnomaTrigger.contains(e.target) && maalumotnomaMenu && !maalumotnomaMenu.contains(e.target)) {
-                    maalumotnomaMenu.classList.remove('show');
-                }
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.getElementById('sidebarToggle');
+        if (toggle) {
+            toggle.addEventListener('click', function () {
+                document.body.classList.toggle('sidebar-open');
             });
-
-            // Mobile menu toggle
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            const navLinks = document.getElementById('navLinks');
-
-            if (mobileToggle && navLinks) {
-                mobileToggle.addEventListener('click', function() {
-                    navLinks.classList.toggle('show');
-                    const icon = mobileToggle.querySelector('i');
-                    if (navLinks.classList.contains('show')) {
-                        icon.classList.remove('fa-bars');
-                        icon.classList.add('fa-times');
-                    } else {
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
-                });
-            }
-        });
-    </script>
-    {% endblock extra_scripts %}
-
+        }
+    });
+</script>
+{% block extra_scripts %}{% endblock extra_scripts %}
 </body>
 </html>
