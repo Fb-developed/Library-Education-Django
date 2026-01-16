@@ -2,8 +2,9 @@
 
 from django.shortcuts import render, redirect, get_object_or_404 # ⬅️ get_object_or_404-ро ИЛОВА КУНЕД
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Book, BookPriceFactor 
-from .forms import BookForm  # ⬅️ ❗️ ИН САТРРО ИЛОВА КУНЕД ❗️
+from .forms import BookForm, BookPriceFactorForm  # ⬅️ ❗️ ИН САТРРО ИЛОВА КУНЕД ❗️
 from django.http import HttpResponse # ⬅️ ❗️ ИН САТРРО ИЛОВА КУНЕД ❗️
 
 
@@ -186,3 +187,44 @@ def book_price_factor_list_view(request):
         'total_count': price_factors.count(),
     }
     return render(request, 'dashboard/book_price_factors.html', context)
+
+
+@login_required
+def book_price_factor_create_view(request):
+    if request.method == 'POST':
+        form = BookPriceFactorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Фоизноки нав бомуваффақият илова шуд.")
+            return redirect('book:price_factors')
+    else:
+        form = BookPriceFactorForm()
+
+    context = {
+        'form': form,
+        'page_title': 'Иловаи фоизноки иҷора',
+        'submit_label': 'Илова кардан',
+    }
+    return render(request, 'dashboard/book_price_factor_form.html', context)
+
+
+@login_required
+def book_price_factor_update_view(request, pk):
+    factor = get_object_or_404(BookPriceFactor, pk=pk)
+
+    if request.method == 'POST':
+        form = BookPriceFactorForm(request.POST, instance=factor)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Фоизноки интихобшуда навсозӣ шуд.")
+            return redirect('book:price_factors')
+    else:
+        form = BookPriceFactorForm(instance=factor)
+
+    context = {
+        'form': form,
+        'page_title': 'Тағйири фоизноки иҷора',
+        'submit_label': 'Навсозӣ',
+        'factor': factor,
+    }
+    return render(request, 'dashboard/book_price_factor_form.html', context)

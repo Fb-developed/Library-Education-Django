@@ -4,7 +4,7 @@ from django.utils import timezone
 
 class Invoice(models.Model):
     name = models.CharField(max_length=255)
-    invoice_code = models.BigIntegerField()  # Changed to BigInteger for larger numbers
+    invoice_code = models.BigIntegerField(null=True, blank=True)  # Changed to BigInteger for larger numbers
     amount_total = models.FloatField()
     maorif_percent = models.FloatField()  # 2% of education department
     institution_amount = models.FloatField()
@@ -31,3 +31,16 @@ class Invoice(models.Model):
     def is_paid(self):
         """Check if invoice is fully paid"""
         return self.status and self.paid_amount >= self.amount_total
+
+    @classmethod
+    def generate_invoice_code(cls):
+        timestamp = timezone.now().strftime('%y%m%d%H%M%S%f')
+        candidate = int(timestamp)
+        while cls.objects.filter(invoice_code=candidate).exists():
+            candidate += 1
+        return candidate
+
+    def save(self, *args, **kwargs):
+        if not self.invoice_code:
+            self.invoice_code = self.generate_invoice_code()
+        super().save(*args, **kwargs)

@@ -393,7 +393,7 @@
                         <th>Маблағи муассиса</th>
                         <th>Маблағи пардохт</th>
                         <th>Санаи пардохти охирон</th>
-                        <th>Транзакцияҳо</th>
+                        <th>Амалиёт</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -421,13 +421,26 @@
                         <td class="amount-cell"><strong>{{ payment.paid_amount|floatformat:2 }} сом.</strong></td>
                         <td>
                             {% if payment.status %}
-                                {{ payment.created_at|date:"d.m.Y H:i" }}
+                                {% if payment.payment_date %}
+                                    {{ payment.payment_date|date:"d.m.Y H:i" }}
+                                {% else %}
+                                    {{ payment.created_at|date:"d.m.Y H:i" }}
+                                {% endif %}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
                         <td style="text-align: center;">
-                            <i class="fas fa-file-alt transaction-icon" title="Рӯйхати транзакцияҳо"></i>
+                            {% if payment.status %}
+                                <i class="fas fa-check-circle transaction-icon" title="Пардохт шуда"></i>
+                            {% else %}
+                                <form method="POST" action="{% url 'payments_mark_paid' payment.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-filter" style="padding:6px 12px; font-size:0.8rem;">
+                                        <i class="fas fa-check"></i> Пардохт шуд
+                                    </button>
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% empty %}

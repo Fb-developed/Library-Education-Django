@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock title %}
+
+{% block extra_styles %}
+<style>
+    :root {
+        --primary-blue: #34BDEE;
+        --primary-dark: #003366;
+        --text-color: #333;
+        --bg-light: #f4f7f6;
+        --white: #ffffff;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .form-container {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .form-card {
+        background: var(--white);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .form-header {
+        margin-bottom: 20px;
+        color: var(--primary-dark);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .form-actions {
+        margin-top: 25px;
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+        border: none;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        border: none;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+</style>
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h2><i class="fas fa-percentage"></i> {{ page_title }}</h2>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="form-group" style="color:#c33;">
+                    Лутфан хатогиҳоро ислоҳ кунед.
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                {{ form.label.label_tag }}{{ form.label }}
+            </div>
+
+            <div class="form-group">
+                {{ form.factor.label_tag }}{{ form.factor }}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.year_from.label_tag }}{{ form.year_from }}
+                </div>
+                <div class="form-group">
+                    {{ form.year_to.label_tag }}{{ form.year_to }}
+                </div>
+                <div class="form-group">
+                    {{ form.price_from.label_tag }}{{ form.price_from }}
+                </div>
+                <div class="form-group">
+                    {{ form.price_to.label_tag }}{{ form.price_to }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form.description.label_tag }}{{ form.description }}
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'book:price_factors' %}" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Ба қафо
+                </a>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> {{ submit_label }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -48,6 +48,27 @@
         margin-top: 8px;
     }
 
+    .header-actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn-add {
+        background: #ffffff;
+        color: var(--primary-dark);
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
     .table-wrapper {
         background: var(--white);
         border-radius: 12px;
@@ -83,15 +104,27 @@
     }
 
     .data-table thead th:first-child {
-        width: 35%;
-    }
-
-    .data-table thead th:nth-child(2) {
         width: 25%;
     }
 
+    .data-table thead th:nth-child(2) {
+        width: 15%;
+    }
+
     .data-table thead th:nth-child(3) {
-        width: 40%;
+        width: 20%;
+    }
+
+    .data-table thead th:nth-child(4) {
+        width: 20%;
+    }
+
+    .data-table thead th:nth-child(5) {
+        width: 15%;
+    }
+
+    .data-table thead th:nth-child(6) {
+        width: 15%;
     }
 
     .data-table tbody tr {
@@ -204,6 +237,11 @@
         <div class="subtitle">
             <i class="fas fa-info-circle"></i> Рӯйхати фоизҳои иҷораи китобҳо
         </div>
+        <div class="header-actions">
+            <a href="{% url 'book:price_factors_add' %}" class="btn-add">
+                <i class="fas fa-plus"></i> Иловаи фоизнок
+            </a>
+        </div>
     </div>
 
     <div class="table-wrapper">
@@ -213,7 +251,10 @@
                     <tr>
                         <th>Номгу</th>
                         <th>Фоиз аз нархи китоб</th>
+                        <th>Диапазони сол</th>
+                        <th>Диапазони нарх</th>
                         <th>Шарҳу эзоҳ</th>
+                        <th>Амалиёт</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,17 +262,36 @@
                     <tr>
                         <td>{{ factor.label }}</td>
                         <td>
-                            <span class="percentage-value">{{ factor.percentage|floatformat:1 }}%</span>
+                            <span class="percentage-value">{{ factor.percent_value|floatformat:1 }}%</span>
+                        </td>
+                        <td>
+                            {% if factor.year_from or factor.year_to %}
+                                {{ factor.year_from|default:"..." }} - {{ factor.year_to|default:"..." }}
+                            {% else %}
+                                Ҳама солҳо
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if factor.price_from or factor.price_to %}
+                                {{ factor.price_from|default:"..." }} - {{ factor.price_to|default:"..." }} сом.
+                            {% else %}
+                                Ҳама нархҳо
+                            {% endif %}
                         </td>
                         <td>{{ factor.description|default:"-" }}</td>
+                        <td>
+                            <a href="{% url 'book:price_factors_edit' factor.id %}" class="btn-add" style="padding:6px 12px;">
+                                <i class="fas fa-edit"></i> Таҳрир
+                            </a>
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="3">
+                        <td colspan="7">
                             <div class="empty-state">
                                 <i class="fas fa-percentage"></i>
                                 <h4>Фоизнокии иҷора мавҷуд нест</h4>
-                                <p>Лутфан дар панели админ фоизнокии иҷораро илова кунед.</p>
+                                <p>Лутфан фоизнокии иҷораро илова кунед.</p>
                             </div>
                         </td>
                     </tr>
